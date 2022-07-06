@@ -10,4 +10,22 @@ router.get('/', async (req, res) => {
   });
 });
 
+router.post('/', async (req, res) => {
+  const {
+    concept,
+    amount,
+    date,
+    categoryId,
+  } = req.body;
+
+  await db.query(
+    'INSERT INTO transactions (concept, amount, date, category_id) VALUES ($1, $2, $3, $4) RETURNING id, concept, amount, date, category_id',
+    [concept, amount, date, categoryId],
+    (err, results) => {
+      if (err) throw err;
+      res.status(200).json(results.rows[0]);
+    },
+  );
+});
+
 module.exports = router;
