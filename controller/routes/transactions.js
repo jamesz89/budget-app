@@ -43,4 +43,23 @@ router.delete('/:id', async (req, res) => {
   );
 });
 
+router.put('/:id', async (req, res) => {
+  const { id } = req.params;
+  const {
+    concept,
+    amount,
+    date,
+    categoryId,
+  } = req.body;
+
+  db.query(
+    'UPDATE transactions SET concept = $1, amount = $2, date = $3, category_id = $4 WHERE id = $5 RETURNING id, concept, amount, date, category_id',
+    [concept, amount, date, categoryId, id],
+    (err, results) => {
+      if (err) throw err;
+      res.status(200).json(results.rows[0]);
+    },
+  );
+});
+
 module.exports = router;
