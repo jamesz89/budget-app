@@ -28,4 +28,19 @@ router.post('/', async (req, res) => {
   );
 });
 
+router.delete('/:id', async (req, res) => {
+  const { id } = req.params;
+
+  db.query(
+    'DELETE FROM transactions WHERE id = $1',
+    [id],
+    (err) => {
+      if (err) throw err;
+      res.status(204).send({
+        message: 'Transaction deleted',
+      });
+    },
+  );
+});
+
 module.exports = router;
